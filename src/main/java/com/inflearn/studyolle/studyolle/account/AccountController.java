@@ -18,10 +18,9 @@ public class AccountController {
     private final AccountService accountService;
     private final SignUpFormValidator signUpFormValidator;
 
-    @InitBinder("signUpForm") // SingupFomr을 따라간다. 변수 명은 바꿔도 상관이 없다.
+    @InitBinder("signUpForm") // SignUpForm 따라간다. 변수 명은 바꿔도 상관이 없다.
     public void initBinder(WebDataBinder webDataBinder){
         // 회원 중복 검증 (닉네임, 이메일)
-
         webDataBinder.addValidators(signUpFormValidator);
     }
 
@@ -46,9 +45,7 @@ public class AccountController {
 //            return "/account/sign-up";
 //        }
 
-
-        accountService.save(signUpForm);
-
+        accountService.processNewAccount(signUpForm);
 
         return "redirect:/";
     }

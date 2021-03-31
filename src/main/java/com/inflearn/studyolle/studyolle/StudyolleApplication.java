@@ -13,8 +13,4 @@ public class StudyolleApplication {
     }
 
 
-    @Bean
-    public BCryptPasswordEncoder encodePwd() {
-        return new BCryptPasswordEncoder();
-    }
 }
