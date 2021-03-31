@@ -25,18 +25,17 @@ public class SignUpFormValidator implements Validator {
 
         // 닉네임, 이메일 중복 검사
 
-        Optional<Account> byNickname = accountRepository.findByNickname(signUpForm.getNickname());
-        if (byNickname.isPresent()){
+        boolean existsByNickname = accountRepository.existsByNickname(((SignUpForm) target).getNickname());
+        if (existsByNickname){
             errors.rejectValue("nickname", "invalid.nickname",
                     new Object[]{signUpForm.getNickname()}, "이미 사용중인 닉네임입니다.");
         }
+
 
         boolean byEmail = accountRepository.existsByEmail(signUpForm.getEmail());
         if (byEmail){
             errors.rejectValue("email", "invalid.email",
                     new Object[]{signUpForm.getEmail()}, "이미 사용중인 이메일입니다.");
         }
-
-
     }
 }

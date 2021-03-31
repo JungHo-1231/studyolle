@@ -2,18 +2,18 @@ package com.inflearn.studyolle.studyolle.account;
 
 import lombok.Data;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 
 @Data
 public class SignUpForm {
 
     @NotEmpty
     @Size(min = 3, max = 20)
+    @Pattern(regexp = "^[ㄱ-ㅎ가-힣a-zA-Z0-9_-]{3,20}$")
     private String nickname;
 
-    @NotNull
+    @Email
+    @NotEmpty
     private String email;
 
     @NotEmpty
