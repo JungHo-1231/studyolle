@@ -38,7 +38,6 @@ class AccountControllerTest {
     @Test
     void sign_up() throws Exception {
         mockMvc.perform(get("/sign-up")
-
         )
         .andExpect(view().name("/account/sign-up"))
         .andExpect(model().attributeExists("signUpForm"))
@@ -50,12 +49,16 @@ class AccountControllerTest {
     @Test
     void signUpSubmit_with_wrong_input() throws Exception {
         mockMvc.perform(post("/sign-up")
-                .param("nickname","mooon")
-                .param("email","email...")
-                .param("password","12345")
-                .with(csrf()))
-                .andExpect(status().isOk())
-                .andExpect(view().name("/account/sign-up"));
+                        .param("nickname", "jungho")
+                        .param("email", "jun.....")
+                        .param("password", "123")
+                        .with(csrf())
+
+        )
+        .andExpect(status().isOk())
+        .andExpect(view().name("/account/sign-up"))
+
+        ;
     }
 
 
@@ -64,6 +67,7 @@ class AccountControllerTest {
     void signUpSubmit() throws Exception {
         String email = "jung@email.com";
         String password = "12345678";
+
         mockMvc.perform(post("/sign-up")
                 .param("nickname", "jung")
                 .param("email", email)
@@ -73,9 +77,7 @@ class AccountControllerTest {
                 .andDo(print())
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/"))
-
         ;
-
 
         Account account = accountRepository.findByEmail(email);
         assertNotNull(account);
@@ -83,6 +85,4 @@ class AccountControllerTest {
 
         then(javaMailSender).should().send(any(SimpleMailMessage.class));
     }
-
-
 }
