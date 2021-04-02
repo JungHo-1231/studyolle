@@ -1,0 +1,16 @@
+spring:
+  profiles:
+    active: local
+
+
+  mail:
+    host: smtp.gmail.com
+    port: 586
+    username: parkjung00700@gmail.com
+    password: 111
+    properties:
+      mail:
+        smtp:
+          auth: ture
+          starttls:
+            enable: true
