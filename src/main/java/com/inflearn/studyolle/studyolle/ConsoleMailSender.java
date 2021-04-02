@@ -49,6 +49,7 @@ public class ConsoleMailSender implements JavaMailSender {
     @Override
     public void send(SimpleMailMessage simpleMessage) throws MailException {
         log.info(simpleMessage.getText());
+        log.info("--------------------------");
     }
 
     @Override
