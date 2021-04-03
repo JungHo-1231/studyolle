@@ -6,6 +6,10 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+
 
 @Service
 @RequiredArgsConstructor
@@ -15,10 +19,13 @@ public class AccountService {
     private final AccountRepository accountRepository;
     private final JavaMailSender javaMailSender;
 
+    @Transactional
     public void processNewAccount(SignUpForm signUpForm) {
+
         Account newAccount = saveNewAccount(signUpForm);
         newAccount.generateEmailCheckToken();
         sendSighUpConfirmEmail(newAccount);
+
     }
 
     public void sendSighUpConfirmEmail(Account newAccount) {

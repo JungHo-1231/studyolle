@@ -6,7 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
-@Transactional(readOnly = true)
+@Transactional
 public interface AccountRepository extends JpaRepository<Account, Long> {
 
     Optional<Account> findByNickname(String nickname);
@@ -16,4 +16,6 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     boolean existsByNickname(String nickname);
 
     Account findByEmail(String email);
+
+    Account findByEmailAndEmailCheckToken(String email, String token);
 }
