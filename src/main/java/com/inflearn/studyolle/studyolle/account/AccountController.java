@@ -23,23 +23,23 @@ public class AccountController {
     private final AccountRepository accountRepository;
 
     @InitBinder("signUpForm") // SignUpForm 따라간다. 변수 명은 바꿔도 상관이 없다.
-    public void initBinder(WebDataBinder webDataBinder){
+    public void initBinder(WebDataBinder webDataBinder) {
         // 회원 중복 검증 (닉네임, 이메일)
         webDataBinder.addValidators(signUpFormValidator);
     }
 
     @GetMapping("/sign-up")
-    public String singUpForm(Model model){
-        model.addAttribute( new SignUpForm());
+    public String singUpForm(Model model) {
+        model.addAttribute(new SignUpForm());
 
         return "/account/sign-up";
     }
 
     @PostMapping("/sign-up")
     public String signUpSubmit(@Valid SignUpForm signUpForm,
-                               Errors errors){
+                               Errors errors) {
 
-        if (errors.hasErrors()){
+        if (errors.hasErrors()) {
             return "/account/sign-up";
         }
 
@@ -49,30 +49,31 @@ public class AccountController {
 //            return "/account/sign-up";
 //        }
 
-        accountService.processNewAccount(signUpForm);
-
+        Account account = accountService.processNewAccount(signUpForm);
+        accountService.login(account);
         return "redirect:/";
     }
 
     @GetMapping("/check-email-token")
     public String checkEmailToken(@RequestParam("token") String token,
-                                  @RequestParam("email") String email , Model model){
+                                  @RequestParam("email") String email, Model model) {
 
         Account account = accountRepository.findByEmail(email);
 
         String view = "/account/checked-email";
-        if (account == null){
+        if (account == null) {
             model.addAttribute("error", "wrong.emil");
             return view;
         }
 
-        if (!account.getEmailCheckToken().equals(token)){
+//        if (!account.getEmailCheckToken().equals(token)){
+        if (!account.isValidToken(token)) {
             model.addAttribute("error", "wrong.token");
             return view;
         }
 
-        account.setEmailVerified(true);
-        account.setJoinedAt(LocalDateTime.now());
+        account.completeSighUp();
+        accountService.login(account);
 
         model.addAttribute("nickname", account.getNickname());
         model.addAttribute("numberOfUser", accountRepository.count());
