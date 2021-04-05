@@ -18,6 +18,7 @@ bin/
 !**/src/main/**/bin/
 !**/src/test/**/bin/
 
+
 ### IntelliJ IDEA ###
 .idea
 *.iws
@@ -27,7 +28,7 @@ out/
 !**/src/main/**/out/
 !**/src/test/**/out/
 src/main/resources/application.yml
-
+*-dev.yml
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
@@ -37,3 +38,8 @@ src/main/resources/application.yml
 
 ### VS Code ###
 .vscode/
+
+### NPM ###
+src/main/resources/static/node_modules
+src/main/resources/static/node
+
