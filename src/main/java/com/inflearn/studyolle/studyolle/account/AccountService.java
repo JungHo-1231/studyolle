@@ -4,8 +4,17 @@ import com.inflearn.studyolle.studyolle.domain.Account;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
 
 @Service
 @RequiredArgsConstructor
@@ -15,10 +24,15 @@ public class AccountService {
     private final AccountRepository accountRepository;
     private final JavaMailSender javaMailSender;
 
-    public void processNewAccount(SignUpForm signUpForm) {
+    @Transactional
+    public Account processNewAccount(SignUpForm signUpForm) {
+
         Account newAccount = saveNewAccount(signUpForm);
         newAccount.generateEmailCheckToken();
         sendSighUpConfirmEmail(newAccount);
+
+        return newAccount;
+
     }
 
     public void sendSighUpConfirmEmail(Account newAccount) {
@@ -50,5 +64,15 @@ public class AccountService {
         return account;
     }
 
+    // 정석이 아닌 방법으로 로그인
+    // 정석대로 하기 위해서는 암호화 되지 않은 비밀번호가 필요하기 때문에
+    public void login(Account account) {
+        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
+                account.getNickname(),
+                account.getPassword(),
+                List.of(new SimpleGrantedAuthority("ROLE_USER")));
 
+        SecurityContext context = SecurityContextHolder.getContext();
+        context.setAuthentication(token);
+    }
 }
