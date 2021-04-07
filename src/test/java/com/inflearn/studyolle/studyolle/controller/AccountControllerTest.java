@@ -143,4 +143,11 @@ class AccountControllerTest {
                 ;
     }
 
+//    @Test
+//    void checkEmail() throws Exception {
+//        mockMvc.perform(get("/check-email"))
+//                .andDo(print())
+//                .andExpect(view().name("account/check-email"));
+//    }
+
 }
