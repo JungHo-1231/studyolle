@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<meta charset="UTF-8">
+<title>StudyOlle</title>
+
+<head th:replace="fragments.html :: head"></head>
+
+<body class="bg-light">
+<div th:replace="fragments.html :: main-nav"></div>
+
+<div class="container">
+    <div class="py-5 text-center">
+        <h5>스터디 올래</h5>
+        </br>
+        <h2>로그인</h2>
+    </div>
+    <div class="row justify-content-center">
+
+        <form class="needs-validation col-sm-6" action="#"
+              th:action="@{/login}" method="post">
+            <div class="form-group">
+                <label for="nickname">이메일 또는 닉네임</label>
+                <input id="nickname" type="text" class="form-control"
+                       placeholder="whiteship" aria-describedby="nicknameHelp" required minlength="3" maxlength="20">
+                <small id="nicknameHelp" class="form-text text-muted">
+                    가입할 때 사용한 이메일 또는 닉네임을 입력하세요.
+                </small>
+                <small class="invalid-feedback">닉네임을 입력하세요.</small>
+
+            </div>
+
+
+            <div class="form-group">
+                <label for="password">패스워드</label>
+                <input id="password" type="password" class="form-control"
+                       aria-describedby="passwordHelp" required minlength="8" maxlength="50">
+                <small id="passwordHelp" class="form-text text-muted">
+                    패스워드가 기억나지 않는다면, <a href="#">패스워드 없이 로그인하기</a>
+                </small>
+                <small class="invalid-feedback">패스워드를 입력하세요.</small>
+
+            </div>
+
+            <div class="form-group">
+                <button class="btn btn-primary btn-block" type="submit"
+                        aria-describedby="submitHelp">로그인
+                </button>
+                <small id="submitHelp" class="form-text text-muted">
+                    스터디올래에 처음 오신거라면 <a href="@{/sign-up}">계정을 먼저 만드세요.</a>
+                </small>
+            </div>
+        </form>
+    </div>
+
+    <footer th:replace="fragments.html :: footer"></footer>
+</div>
+</body>
+</html>
