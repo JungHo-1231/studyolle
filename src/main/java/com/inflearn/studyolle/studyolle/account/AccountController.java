@@ -32,7 +32,7 @@ public class AccountController {
     public String singUpForm(Model model) {
         model.addAttribute(new SignUpForm());
 
-        return "/account/sign-up";
+        return "account/sign-up";
     }
 
     @PostMapping("/sign-up")

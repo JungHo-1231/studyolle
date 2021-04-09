@@ -9,7 +9,7 @@ import java.util.Optional;
 @Transactional
 public interface AccountRepository extends JpaRepository<Account, Long> {
 
-    Optional<Account> findByNickname(String nickname);
+    Account findByNickname(String nickname);
 
     boolean existsByEmail(String email);
 
@@ -18,4 +18,5 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     Account findByEmail(String email);
 
     Account findByEmailAndEmailCheckToken(String email, String token);
+
 }
