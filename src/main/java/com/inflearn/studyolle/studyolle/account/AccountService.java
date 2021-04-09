@@ -20,7 +20,8 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class AccountService {
+public class AccountService implements UserDetailsService {
+
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final AccountRepository accountRepository;
@@ -42,7 +43,7 @@ public class AccountService {
         newAccount.generateEmailCheckToken();
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setSubject("스터디올래, 회원 가입 인증");
-        mailMessage.setText("/check-email-token?token=" + newAccount.getEmailCheckToken()+
+        mailMessage.setText("/check-email-token?token=" + newAccount.getEmailCheckToken() +
                 "&email=" + newAccount.getEmail()
         );
 
@@ -79,4 +80,20 @@ public class AccountService {
     }
 
 
+    @Override
+    public UserDetails loadUserByUsername(String emailOrNickname) throws UsernameNotFoundException {
+
+        Account account = accountRepository.findByEmail(emailOrNickname);
+
+        if (account == null){
+            account = accountRepository.findByNickname(emailOrNickname);
+
+        }
+
+        if (account == null) {
+            throw new UsernameNotFoundException(emailOrNickname);
+        }
+
+        return new UserAccount(account);
+    }
 }
