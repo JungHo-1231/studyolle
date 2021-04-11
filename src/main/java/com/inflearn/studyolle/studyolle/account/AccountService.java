@@ -1,6 +1,8 @@
 package com.inflearn.studyolle.studyolle.account;
 
 import com.inflearn.studyolle.studyolle.domain.Account;
+import com.inflearn.studyolle.studyolle.settings.PasswordForm;
+import com.inflearn.studyolle.studyolle.settings.Profile;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -19,6 +21,7 @@ import java.util.List;
 
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class AccountService implements UserDetailsService {
 
@@ -79,7 +82,7 @@ public class AccountService implements UserDetailsService {
         context.setAuthentication(token);
     }
 
-
+    @Transactional(readOnly = true)
     @Override
     public UserDetails loadUserByUsername(String emailOrNickname) throws UsernameNotFoundException {
 
@@ -87,7 +90,6 @@ public class AccountService implements UserDetailsService {
 
         if (account == null){
             account = accountRepository.findByNickname(emailOrNickname);
-
         }
 
         if (account == null) {
@@ -95,5 +97,31 @@ public class AccountService implements UserDetailsService {
         }
 
         return new UserAccount(account);
+    }
+
+    public void completeSignup(Account account) {
+        account.completeSighUp();
+        login(account);
+    }
+
+    public void updateProfile(Account account, Profile profile) {
+        account.setBio(profile.getBio());
+        account.setLocation(profile.getLocation());
+        account.setOccupation(profile.getOccupation());
+        account.setUrl(profile.getUrl());
+        account.setProfileImage(profile.getProfileImage());
+
+        accountRepository.save(account);
+
+    }
+
+    public void updatePassword(Account account, PasswordForm passwordForm) throws Exception {
+        String newPassword = passwordForm.getNewPassword();
+
+        String encode = bCryptPasswordEncoder.encode(newPassword);
+        account.setPassword(encode);
+
+        accountRepository.save(account);
+
     }
 }

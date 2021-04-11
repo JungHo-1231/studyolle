@@ -1,12 +1,10 @@
 package com.inflearn.studyolle.studyolle.account;
 
-import com.inflearn.studyolle.studyolle.domain.Account;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor

@@ -2,6 +2,7 @@ package com.inflearn.studyolle.studyolle.account;
 
 import com.inflearn.studyolle.studyolle.domain.Account;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.boot.model.naming.IllegalIdentifierException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -69,8 +70,7 @@ public class AccountController {
             return view;
         }
 
-        account.completeSighUp();
-        accountService.login(account);
+        accountService.completeSignup(account);
 
         model.addAttribute("nickname", account.getNickname());
         model.addAttribute("numberOfUser", accountRepository.count());
@@ -99,6 +99,22 @@ public class AccountController {
         return "redirect:/";
     }
 
+    @GetMapping("/profile/{nickname}")
+    public String viewProfile(@PathVariable String nickname,
+                              Model model, @CurrentUser Account
+                              account){
+
+        Account byNickname = accountRepository.findByNickname(nickname);
+
+        if (nickname == null) {
+            throw new IllegalIdentifierException(nickname + " 에 해당하는 사용자가 없습니다.");
+        }
+
+        model.addAttribute(byNickname);
+        model.addAttribute("isOwner", byNickname.equals(account));
+
+        return "account/profile";
+    }
 
 }
 
