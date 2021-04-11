@@ -122,6 +122,6 @@ public class AccountService implements UserDetailsService {
         account.setPassword(encode);
 
         accountRepository.save(account);
-
     }
+
 }

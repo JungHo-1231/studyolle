@@ -9,10 +9,12 @@ import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.test.context.support.TestExecutionEvent;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -33,6 +35,9 @@ class SettingsControllerTest {
 
     @Autowired
     AccountRepository accountRepository;
+
+    @Autowired
+    BCryptPasswordEncoder bCryptPasswordEncoder;
 
 
 
@@ -127,5 +132,68 @@ class SettingsControllerTest {
                 .andExpect(model().attributeExists("profile"))
                 .andDo(print())
         ;
+    }
+    @Test
+    @WithAccount("jungho")
+    void 패스워드_view_출력()throws Exception{
+        //given
+
+        //when
+
+        //then
+        mockMvc.perform(get(SettingsController.SETTINGS_PROFILE_PASSWORD_NAME))
+                .andExpect(status().isOk())
+                .andExpect(view().name("settings/password"))
+                .andExpect(model().attributeExists("account"))
+                .andExpect(model().attributeExists("passwordForm"))
+                .andDo(print())
+                ;
+
+    }
+
+    @Test
+    @WithAccount("jungho")
+    @DisplayName("패스워드 수정 - 성공")
+    void 패스워드_수정_성공()throws Exception{
+        //given
+
+        //when
+
+        //then
+        String password = "11111111";
+        mockMvc.perform(post(SettingsController.SETTINGS_PROFILE_PASSWORD_NAME)
+                .param("newPassword" , password)
+                .param("newPasswordConfirm", password)
+                .with(csrf())
+        )
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:" + SettingsController.SETTINGS_PROFILE_URL))
+                .andExpect(flash().attributeExists("message"))
+
+                ;
+
+        Account jungho = accountRepository.findByNickname("jungho");
+        assertTrue(bCryptPasswordEncoder.matches(password, jungho.getPassword()));
+    }
+
+
+    @Test
+    @WithAccount("jungho")
+    @DisplayName("패스워드 수정 - 실패 - 패스워드 불일치")
+    void 패스워드_수정_실패_불일치()throws Exception{
+        //given
+
+        //when
+
+        //then
+        mockMvc.perform(post(SettingsController.SETTINGS_PROFILE_PASSWORD_NAME)
+                .param("newPassword", "12345678")
+                .param("newPasswordConfirm", "11111111")
+                .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("settings/password"))
+                .andExpect(model().hasErrors())
+                .andExpect(model().attributeExists("passwordForm"))
+                .andExpect(model().attributeExists("account"));
     }
 }
