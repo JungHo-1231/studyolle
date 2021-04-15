@@ -3,6 +3,11 @@ package com.inflearn.studyolle.studyolle.settings;
 import com.inflearn.studyolle.studyolle.account.AccountService;
 import com.inflearn.studyolle.studyolle.account.CurrentUser;
 import com.inflearn.studyolle.studyolle.domain.Account;
+import com.inflearn.studyolle.studyolle.settings.form.NicknameForm;
+import com.inflearn.studyolle.studyolle.settings.form.Notifications;
+import com.inflearn.studyolle.studyolle.settings.form.PasswordForm;
+import com.inflearn.studyolle.studyolle.settings.form.Profile;
+import com.inflearn.studyolle.studyolle.settings.validator.PasswordFormValidator;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Controller;
@@ -23,10 +28,14 @@ public class SettingsController {
     private final ModelMapper modelMapper;
 
     static final String SETTINGS_PROFILE_VIEW_NAME = "settings/profile";
-    static final String SETTINGS_PROFILE_URL = "/settings/profile";
-    static final String SETTINGS_PROFILE_PASSWORD_NAME = "/settings/password";
-    static final String SETTINGS_PROFILE_PASSWORD_URL = "settings/password";
-    static final String SETTINGS_NOTIFICATIONS_URL = "/settings/notifications";
+    static final String SETTINGS_PROFILE_URL = "/" + SETTINGS_PROFILE_VIEW_NAME;
+    static final String SETTINGS_PASSWORD_VIEW_NAME = "settings/password";
+    static final String SETTINGS_PASSWORD_URL = "/" + SETTINGS_PASSWORD_VIEW_NAME;
+    static final String SETTINGS_NOTIFICATIONS_VIEW_NAME = "settings/notifications";
+    static final String SETTINGS_NOTIFICATIONS_URL = "/" + SETTINGS_NOTIFICATIONS_VIEW_NAME;
+    static final String SETTINGS_ACCOUNT_VIEW_NAME = "settings/account";
+    static final String SETTINGS_ACCOUNT_URL = "/" + SETTINGS_ACCOUNT_VIEW_NAME;
+
 
     @InitBinder("passwordForm")
     public void initBinder(WebDataBinder webDataBinder) {
@@ -58,20 +67,21 @@ public class SettingsController {
 
     }
 
-    @GetMapping(SETTINGS_PROFILE_PASSWORD_NAME)
+    @GetMapping(SETTINGS_PASSWORD_URL)
     public String passwordChangeForm(@CurrentUser Account account, Model model){
         model.addAttribute(account);
         model.addAttribute(new PasswordForm());
 
-        return SETTINGS_PROFILE_PASSWORD_URL;
+        return SETTINGS_PASSWORD_VIEW_NAME;
     }
 
-    @PostMapping(SETTINGS_PROFILE_PASSWORD_NAME)
+    @PostMapping(SETTINGS_PASSWORD_URL)
     public String passwordChange(@CurrentUser Account account,
                                  @Valid PasswordForm passwordForm, Errors errors , Model model, RedirectAttributes attributes) throws Exception {
 
         if (errors.hasErrors()){
-            return SETTINGS_PROFILE_PASSWORD_URL;
+            model.addAttribute(account);
+            return SETTINGS_PASSWORD_VIEW_NAME;
         }
 
         accountService.updatePassword(account, passwordForm);
@@ -91,10 +101,30 @@ public class SettingsController {
     public String notificationUpdate(@CurrentUser Account account,Model model,@Valid Notifications notifications, Errors errors,
                                      RedirectAttributes attributes){
         if (errors.hasErrors()){
+            model.addAttribute(account);
             return "settings/notifications";
         }
         accountService.updateNotification(account, notifications);
         attributes.addFlashAttribute("message", "알림 설정이 업데이트 되었습니다.");
+
+        return "redirect:" + SETTINGS_NOTIFICATIONS_URL;
+    }
+
+    @GetMapping(SETTINGS_ACCOUNT_URL)
+    public String accountForm(@CurrentUser Account account, Model model){
+        model.addAttribute(modelMapper.map(account, NicknameForm.class));
+
+        return SETTINGS_ACCOUNT_VIEW_NAME;
+    }
+
+    @PostMapping(SETTINGS_ACCOUNT_URL)
+    public String accountUpdateForm(@CurrentUser Account account, @Valid NicknameForm nicknameForm, Errors errors, Model model){
+        if (errors.hasErrors()){
+            model.addAttribute(account);
+            return SETTINGS_ACCOUNT_VIEW_NAME;
+        }
+
+        accountService.nickNameUpdate(account, nicknameForm);
 
         return "redirect:" + SETTINGS_NOTIFICATIONS_URL;
     }

@@ -1,4 +1,4 @@
-package com.inflearn.studyolle.studyolle.settings;
+package com.inflearn.studyolle.studyolle.settings.form;
 
 import com.inflearn.studyolle.studyolle.domain.Account;
 import lombok.Data;

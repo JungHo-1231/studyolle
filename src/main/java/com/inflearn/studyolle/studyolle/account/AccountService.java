@@ -1,9 +1,10 @@
 package com.inflearn.studyolle.studyolle.account;
 
 import com.inflearn.studyolle.studyolle.domain.Account;
-import com.inflearn.studyolle.studyolle.settings.Notifications;
-import com.inflearn.studyolle.studyolle.settings.PasswordForm;
-import com.inflearn.studyolle.studyolle.settings.Profile;
+import com.inflearn.studyolle.studyolle.settings.form.NicknameForm;
+import com.inflearn.studyolle.studyolle.settings.form.Notifications;
+import com.inflearn.studyolle.studyolle.settings.form.PasswordForm;
+import com.inflearn.studyolle.studyolle.settings.form.Profile;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.mail.SimpleMailMessage;
@@ -138,6 +139,11 @@ public class AccountService implements UserDetailsService {
 //        account.setStudyUpdatedByWeb(notifications.isStudyUpdatedByWeb());
 
         modelMapper.map(notifications, account);
+        accountRepository.save(account);
+    }
+
+    public void nickNameUpdate(Account account, NicknameForm nicknameForm) {
+        modelMapper.map(nicknameForm, account);
         accountRepository.save(account);
     }
 }
