@@ -3,18 +3,13 @@ package com.inflearn.studyolle.studyolle.settings;
 import com.inflearn.studyolle.studyolle.WithAccount;
 import com.inflearn.studyolle.studyolle.account.AccountRepository;
 import com.inflearn.studyolle.studyolle.account.AccountService;
-import com.inflearn.studyolle.studyolle.account.SignUpForm;
 import com.inflearn.studyolle.studyolle.domain.Account;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.test.context.support.TestExecutionEvent;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;

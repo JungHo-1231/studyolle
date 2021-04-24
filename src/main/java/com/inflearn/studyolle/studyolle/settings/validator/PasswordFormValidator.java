@@ -1,7 +1,7 @@
-package com.inflearn.studyolle.studyolle.settings;
+package com.inflearn.studyolle.studyolle.settings.validator;
 
 
-import org.springframework.stereotype.Component;
+import com.inflearn.studyolle.studyolle.settings.form.PasswordForm;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
