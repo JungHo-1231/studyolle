@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -53,6 +54,9 @@ public class Account {
 
     private LocalDateTime emailCheckTokenGeneratedAt;
 
+    @ManyToMany
+    private Set<Tag> tags;
+
 
     public void generateEmailCheckToken() {
         emailCheckToken = UUID.randomUUID().toString();
@@ -71,4 +75,6 @@ public class Account {
     public boolean canSendConfirmEmail() {
         return emailCheckTokenGeneratedAt.isBefore(LocalDateTime.now().minusHours(1));
     }
+
+
 }

@@ -1,6 +1,7 @@
 package com.inflearn.studyolle.studyolle.account;
 
 import com.inflearn.studyolle.studyolle.domain.Account;
+import com.inflearn.studyolle.studyolle.domain.Tag;
 import com.inflearn.studyolle.studyolle.settings.form.NicknameForm;
 import com.inflearn.studyolle.studyolle.settings.form.Notifications;
 import com.inflearn.studyolle.studyolle.settings.form.PasswordForm;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -145,5 +147,25 @@ public class AccountService implements UserDetailsService {
     public void nickNameUpdate(Account account, NicknameForm nicknameForm) {
         modelMapper.map(nicknameForm, account);
         accountRepository.save(account);
+        login(account);
+    }
+
+    public void sendLoginLink(Account account) {
+        account.generateEmailCheckToken();
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setSubject("스터디올래, 로그인 링크");
+        mailMessage.setText("/login-by-email?token=" + account.getEmailCheckToken() +
+                "&email=" + account.getEmail()
+        );
+        javaMailSender.send(mailMessage);
+    }
+
+    public void addTag(Account account, Tag tag) {
+        Optional<Account> byId = accountRepository.findById(account.getId());
+        byId.ifPresent(a-> a.getTags().add(tag));
+
+
+        //레이지 로딩딩
+//        accontRepository.getOne()
     }
 }

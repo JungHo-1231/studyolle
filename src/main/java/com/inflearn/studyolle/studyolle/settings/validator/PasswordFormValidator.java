@@ -24,7 +24,5 @@ public class PasswordFormValidator implements Validator {
             ,  "패스워드와 새 패스워드 값이 일치하지 않습니다."
             );
         }
-
-
     }
 }

@@ -136,7 +136,7 @@ class SettingsControllerTest {
         //when
 
         //then
-        mockMvc.perform(get(SettingsController.SETTINGS_PROFILE_PASSWORD_NAME))
+        mockMvc.perform(get(SettingsController.SETTINGS_PASSWORD_URL))
                 .andExpect(status().isOk())
                 .andExpect(view().name("settings/password"))
                 .andExpect(model().attributeExists("account"))
@@ -156,7 +156,7 @@ class SettingsControllerTest {
 
         //then
         String password = "11111111";
-        mockMvc.perform(post(SettingsController.SETTINGS_PROFILE_PASSWORD_NAME)
+        mockMvc.perform(post(SettingsController.SETTINGS_PASSWORD_URL)
                 .param("newPassword" , password)
                 .param("newPasswordConfirm", password)
                 .with(csrf())
@@ -181,7 +181,7 @@ class SettingsControllerTest {
         //when
 
         //then
-        mockMvc.perform(post(SettingsController.SETTINGS_PROFILE_PASSWORD_NAME)
+        mockMvc.perform(post(SettingsController.SETTINGS_PASSWORD_URL)
                 .param("newPassword", "12345678")
                 .param("newPasswordConfirm", "11111111")
                 .with(csrf()))

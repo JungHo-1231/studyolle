@@ -30,7 +30,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .mvcMatchers("/", "/login",
                         "/sign-up", "/check-email",
                         "/check-email-token", "/email-login",
-                        "/check-email-login", "/login-link")
+                        "/check-email-login", "/login-link",
+                        "/login-by-email")
                     .permitAll()
                 // profile 은 get 만 허용
                 .mvcMatchers(HttpMethod.GET,"/profile/*").permitAll()
