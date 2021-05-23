@@ -2,6 +2,7 @@ package com.inflearn.studyolle.studyolle.account;
 
 import com.inflearn.studyolle.studyolle.domain.Account;
 import com.inflearn.studyolle.studyolle.domain.Tag;
+import com.inflearn.studyolle.studyolle.domain.Zone;
 import com.inflearn.studyolle.studyolle.settings.form.NicknameForm;
 import com.inflearn.studyolle.studyolle.settings.form.Notifications;
 import com.inflearn.studyolle.studyolle.settings.form.PasswordForm;
@@ -23,13 +24,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class AccountService implements UserDetailsService {
-
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final AccountRepository accountRepository;
@@ -40,11 +41,8 @@ public class AccountService implements UserDetailsService {
     public Account processNewAccount(SignUpForm signUpForm) {
 
         Account newAccount = saveNewAccount(signUpForm);
-        newAccount.generateEmailCheckToken();
         sendSighUpConfirmEmail(newAccount);
-
         return newAccount;
-
     }
 
     public void sendSighUpConfirmEmail(Account newAccount) {
@@ -60,20 +58,10 @@ public class AccountService implements UserDetailsService {
     }
 
     private Account saveNewAccount(SignUpForm signUpForm) {
-        String encodePassword = bCryptPasswordEncoder.encode(signUpForm.getPassword());
-
-        Account account = Account.builder()
-                .nickname(signUpForm.getNickname())
-                .email(signUpForm.getEmail())
-                .password(encodePassword)
-                .studyCreatedByWeb(true)
-                .studyEnrollmentResultByWeb(true)
-                .studyCreatedByWeb(true)
-                .build();
-
-        accountRepository.save(account);
-
-        return account;
+        signUpForm.setPassword(bCryptPasswordEncoder.encode(signUpForm.getPassword()));
+        Account account = modelMapper.map(signUpForm, Account.class);
+        account.generateEmailCheckToken();
+        return accountRepository.save(account);
     }
 
     // 정석이 아닌 방법으로 로그인
@@ -165,7 +153,22 @@ public class AccountService implements UserDetailsService {
         byId.ifPresent(a-> a.getTags().add(tag));
 
 
-        //레이지 로딩딩
+        //레이지 로딩
 //        accontRepository.getOne()
+    }
+
+    public Set<Tag> getTags(Account account) {
+        Optional<Account> findAccount = accountRepository.findById(account.getId());
+        return findAccount.orElseThrow().getTags();
+    }
+
+    public void removeTag(Account account, Tag tag) {
+        Optional<Account> byId = accountRepository.findById(account.getId());
+        byId.ifPresent(a -> a.getTags().remove(tag));
+    }
+
+    public Set<Zone> getZones(Account account) {
+        Optional<Account> byId = accountRepository.findById(account.getId());
+        return byId.orElseThrow().getZones();
     }
 }

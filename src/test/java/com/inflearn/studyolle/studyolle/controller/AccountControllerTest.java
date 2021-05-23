@@ -50,7 +50,7 @@ class AccountControllerTest {
         mockMvc.perform(get("/sign-up")
 
         )
-        .andExpect(view().name("/account/sign-up"))
+        .andExpect(view().name("account/sign-up"))
         .andExpect(model().attributeExists("signUpForm"))
         .andExpect(unauthenticated())
         .andDo(print())
@@ -109,7 +109,7 @@ class AccountControllerTest {
         .andDo(print())
         .andExpect(status().isOk())
         .andExpect(model().attributeExists("error"))
-        .andExpect(view().name("/account/checked-email"))
+        .andExpect(view().name("account/checked-email"))
         .andExpect(unauthenticated())
 
        ;
@@ -140,7 +140,7 @@ class AccountControllerTest {
                 .andExpect(model().attributeExists("nickname"))
                 .andExpect(model().attributeExists("numberOfUser"))
                 .andExpect(model().attributeDoesNotExist("error"))
-                .andExpect(view().name("/account/checked-email"))
+                .andExpect(view().name("account/checked-email"))
                 .andExpect(authenticated().withUsername("jung"))
                 ;
     }
